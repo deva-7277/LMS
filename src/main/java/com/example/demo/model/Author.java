@@ -1,0 +1,27 @@
+package com.example.demo.model;
+
+import lombok.*;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
+@Data
+@NoArgsConstructor
+@Getter
+@Setter
+@AllArgsConstructor
+@Entity
+public class Author {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    private String name;
+
+    private String mobNo;
+
+    @OneToMany(mappedBy = "author", cascade =  CascadeType.ALL)
+    List<Book> bookList = new ArrayList<>();
+}
