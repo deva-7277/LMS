@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.enums.Roles;
 import com.example.demo.model.Author;
 import com.example.demo.repository.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ public class AuthorService {
     @Autowired
     AuthorRepository authorRepository;
     public String addAuthor(Author author) {
+        author.setRoles(Roles.AUTHOR);
         authorRepository.save(author);
         return "Author has been successfully added";
     }

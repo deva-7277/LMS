@@ -5,11 +5,9 @@ import com.example.demo.converters.TransactionConverter;
 import com.example.demo.dto.TransactionRequestDto;
 import com.example.demo.enums.cardStatus;
 import com.example.demo.commons.MailSending;
-import com.example.demo.model.Book;
-import com.example.demo.model.LibraryId;
-import com.example.demo.model.Student;
-import com.example.demo.model.Transaction;
+import com.example.demo.model.*;
 import com.example.demo.repository.BookRepository;
+import com.example.demo.repository.LibrarianRepository;
 import com.example.demo.repository.StudentRepository;
 import com.example.demo.repository.TransactionRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +22,8 @@ import java.util.List;
 @Service
 @Slf4j
 public class TransactionService {
+    @Autowired
+    private LibrarianRepository librarianRepository;
 
     Logger logger = LoggerFactory.getLogger(TransactionService.class);
     @Autowired
@@ -64,6 +64,14 @@ public class TransactionService {
             logger.info("book id not valid :"+transactionRequestDto.getBookId());
             return "Book id not valid";
         }
+        Librarian librarian;
+        try{
+            librarian = librarianRepository.findById(transactionRequestDto.getLibrarianId()).get();
+        }
+        catch (Exception e){
+            logger.info("Librarian id not valid :"+transactionRequestDto.getLibrarianId());
+            return "Librarian id not valid";
+        }
         LibraryId libraryId = student.getLibraryId();
         if(libraryId.getStatus()== cardStatus.BLOCKED){
             logger.info(student.getName()+" your library card is blocked :"+student.getLibraryId().getCardNo());
@@ -79,15 +87,18 @@ public class TransactionService {
         book.setQuantity(book.getQuantity()-1);
 
 //        Setting details as per transaction model
-        Transaction transaction = transactionConverter.getTransactionIssueModel(transactionRequestDto,book,libraryId);
+        Transaction transaction = transactionConverter.getTransactionIssueModel(transactionRequestDto,book,libraryId,librarian);
 
 
         logger.info(student.getName()+" is having "+bookList.size() +" books from library");
+        librarianRepository.save(librarian);
+        studentRepository.save(student);
         bookRepository.save(book);
+        transactionRepository.save(transaction);
 
         mailSending.sendIssueMail(student,book);
 
-        return student.getName()+" has issued "+ book.getBookName() +" on "+transaction.getTransactionDate()
+        return student.getName()+" has issued "+ book.getBookName() + " by "+ librarian.getName()+" on "+transaction.getTransactionDate()
                 +" and has "+bookList.size() +" books on his name";
     }
 

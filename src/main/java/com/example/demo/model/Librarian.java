@@ -3,11 +3,11 @@ package com.example.demo.model;
 import com.example.demo.enums.Department;
 import com.example.demo.enums.Roles;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jdk.jfr.DataAmount;
 import lombok.*;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -15,11 +15,12 @@ import javax.persistence.*;
 @Setter
 @AllArgsConstructor
 @Entity
-public class Student {
+public class Librarian {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(nullable = false)
     private String name;
 
     @Column(unique = true,nullable = false)
@@ -33,12 +34,15 @@ public class Student {
 
     private int age;
 
+    @Enumerated(EnumType.STRING)
     private Roles roles;
 
-    @Enumerated(EnumType.STRING)
-    private Department dept;
+    @JsonIgnore
+    @OneToMany(mappedBy = "librarian", cascade = CascadeType.ALL)
+    List<Book> booksIssued = new ArrayList<>();
 
-    @OneToOne(mappedBy = "student", cascade = CascadeType.ALL)
-    private LibraryId libraryId;
+    @JsonIgnore
+    @OneToMany(mappedBy = "librarian", cascade = CascadeType.ALL)
+    List<Transaction> transactionList = new ArrayList<>();
 
 }

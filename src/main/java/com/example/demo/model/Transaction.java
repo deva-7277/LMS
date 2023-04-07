@@ -36,4 +36,8 @@ public class Transaction {
     @JoinColumn
     LibraryId libraryId;
 
+    @ManyToOne
+    @JoinColumn
+    Librarian librarian;
+
 }
