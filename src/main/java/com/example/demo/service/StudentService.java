@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.enums.Roles;
 import com.example.demo.enums.cardStatus;
 import com.example.demo.model.LibraryId;
 import com.example.demo.model.Student;
@@ -23,6 +24,7 @@ public class StudentService {
         libraryId.setStudent(student);
 
         student.setLibraryId(libraryId);
+        student.setRoles(Roles.STUDENT);
         studentRepository.save(student);
         return "Student successfully added with student id: "+student.getId()+" with library id card no: "+libraryId.getCardNo();
     }

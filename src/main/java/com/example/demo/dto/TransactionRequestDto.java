@@ -17,5 +17,7 @@ public class TransactionRequestDto {
 
     private int bookId;
 
+    private int librarianId;
+
     private RetunredOrIssued retunredOrIssued;
 }

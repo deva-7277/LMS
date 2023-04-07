@@ -38,4 +38,8 @@ public class Book {
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     @JsonIgnore
     List<Transaction> transactionList = new ArrayList<>();
+
+    @ManyToOne
+    @JsonIgnore
+    Librarian librarian;
 }

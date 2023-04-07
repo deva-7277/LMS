@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import com.example.demo.enums.Roles;
 import lombok.*;
 
 import javax.persistence.*;
@@ -21,6 +22,9 @@ public class Author {
     private String name;
 
     private String mobNo;
+
+    @Enumerated(EnumType.STRING)
+    private Roles roles;
 
     @OneToMany(mappedBy = "author", cascade =  CascadeType.ALL)
     List<Book> bookList = new ArrayList<>();
